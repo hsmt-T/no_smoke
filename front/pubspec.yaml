@@ -30,7 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  http: ^1.1.0           # NestJS API 呼び出し用
+  url_launcher: ^6.1.5   # ブラウザで LINE ログイン画面を開く
+  app_links: ^6.3.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8

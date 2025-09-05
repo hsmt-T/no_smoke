@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import './record_screen.dart';
+
+//開発中のみ
+import 'package:shared_preferences/shared_preferences.dart';
+import './login_screen.dart'; 
+//開発中のみ
 
 class TopScreen extends StatefulWidget {
   const TopScreen({super.key});
@@ -11,7 +17,7 @@ class _TopScreenState extends State<TopScreen> {
   int _selectIndex = 1;
 
   static final List<Widget> _widgetOptions = <Widget>[
-    const Center(child: Text('0')),
+    const RecordPage(),
     const TopPage(),
     const Center(child: Text('2')),
   ];
@@ -29,15 +35,19 @@ class _TopScreenState extends State<TopScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.edit_note), label: '記録'),
-          BottomNavigationBarItem(icon: Icon(Icons.smoking_rooms), label: 'TOP'),
+          BottomNavigationBarItem(icon: Icon(Icons.smoking_rooms),label: 'TOP',),
           BottomNavigationBarItem(icon: Icon(Icons.maps_ugc), label: '共有'),
         ],
         currentIndex: _selectIndex,
         onTap: _onItemTapped,
         backgroundColor: const Color(0xFF212121),
-        selectedItemColor: Colors.white,
+        selectedItemColor: Color(0xFFE74545),
         unselectedItemColor: Colors.grey[600],
         type: BottomNavigationBarType.fixed,
+
+        selectedLabelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF742424)),
+        unselectedLabelStyle: const TextStyle(fontSize: 13),
+        iconSize: 30,
       ),
     );
   }
@@ -48,9 +58,8 @@ class TopPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
+    return Center(
+      child: Column(
         children: [
           SizedBox(height: 150),
           const Row(
@@ -58,19 +67,20 @@ class TopPage extends StatelessWidget {
             children: [
               Text(
                 'today',
-                style: TextStyle(
-                  color: Color(0xFFE74545),
-                  fontSize: 60
-                  
-                ),
+                style: TextStyle(color: Color(0xFFE74545), fontSize: 60),
               ),
               SizedBox(width: 24),
-              Text(':',style: TextStyle(fontSize: 35,color: Color(0xFFE74545)),),
+              Text(
+                ':',
+                style: TextStyle(fontSize: 35, color: Color(0xFFE74545)),
+              ),
               SizedBox(width: 25),
 
-              Text('6',style: TextStyle(
-                color: Color.fromARGB(255, 255, 255, 255),
-                fontSize: 60,
+              Text(
+                '6',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 60,
                 ),
               ),
             ],
@@ -82,25 +92,28 @@ class TopPage extends StatelessWidget {
                 'Average',
                 style: TextStyle(
                   color: Color.fromARGB(255, 231, 231, 231),
-                  fontSize: 23
+                  fontSize: 23,
                 ),
               ),
               SizedBox(width: 10),
-              Text(':',style: TextStyle(fontSize: 20,color: Color.fromARGB(255, 255, 255, 255)),),
+              Text(
+                ':',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+              ),
               SizedBox(width: 20),
 
-              Text('7',style: TextStyle(
-                color: Color(0xFFE74545),
-                fontSize: 23,
-                ),),
+              Text(
+                '7',
+                style: TextStyle(color: Color(0xFFE74545), fontSize: 23),
+              ),
             ],
           ),
-          const SizedBox(height: 135),
-
-          // Icon(Icons.smoke_free, size: 150, color: Colors.grey[800]),
-
+          const SizedBox(height: 120),
           Image.asset('assets/images/tobacco.png'),
-          const SizedBox(height: 135),
+          const SizedBox(height: 110),
           SizedBox(
             child: ElevatedButton(
               onPressed: () {},
@@ -115,13 +128,29 @@ class TopPage extends StatelessWidget {
               ),
               child: const Text(
                 '喫煙',
-                style: TextStyle(color: Colors.white, fontSize: 30)),
+                style: TextStyle(color: Colors.white, fontSize: 30),
               ),
             ),
+          ),
+
+          //開発中のみ
+          ElevatedButton(
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.remove('jwt'); // ← JWT削除
+              if (context.mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                );
+              }
+            },
+          child: Text("ログアウト（開発用）"),
+          ),
+          //開発中のみ
+          
         ],
       ),
-      ),
-      // padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
     );
   }
 }

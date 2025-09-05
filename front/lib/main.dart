@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:front/pages/top_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './pages/login_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final jwt = prefs.getString('jwt');
+
+  runApp(
+    MyApp(
+      initialScreen: jwt != null ? const TopScreen() : const LoginScreen(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget initialScreen;
+  const MyApp({super.key, required this.initialScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +29,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 255, 255, 255),
         ),
       ),
-      home: const LoginScreen(),
+      home: initialScreen,
       debugShowCheckedModeBanner: false,
     );
   }
@@ -36,9 +47,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF212025),
-      
-    );
+    return Scaffold(backgroundColor: Color(0xFF212025));
   }
 }
